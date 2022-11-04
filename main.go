@@ -3,6 +3,8 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"flag"
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -11,6 +13,22 @@ import (
 )
 
 func main() {
+	output := flag.String("output", "peerings.png", "image output path")
+	flag.Parse()
+
+	validOutputFormats := map[string]graphviz.Format{
+		"png": graphviz.PNG,
+		"svg": graphviz.SVG,
+		"jpg": graphviz.JPG,
+	}
+
+	userOutputFmt := strings.Split(*output, ".")[1]
+	outputFmt := validOutputFormats[userOutputFmt]
+	if outputFmt == "" {
+		fmt.Printf("undefined output type: %s\n", userOutputFmt)
+		os.Exit(1)
+	}
+
 	scanner := bufio.NewScanner(os.Stdin)
 
 	maxBufSize := 128
@@ -74,13 +92,13 @@ func main() {
 	}
 
 	var buf bytes.Buffer
-	if err := g.Render(graph, graphviz.PNG, &buf); err != nil {
+	if err := g.Render(graph, outputFmt, &buf); err != nil {
 		log.Fatal(err)
 	}
 
 	g.SetLayout(graphviz.CIRCO)
 
-	if err := g.RenderFilename(graph, graphviz.PNG, "peerings.png"); err != nil {
+	if err := g.RenderFilename(graph, outputFmt, *output); err != nil {
 		log.Fatal(err)
 	}
 
