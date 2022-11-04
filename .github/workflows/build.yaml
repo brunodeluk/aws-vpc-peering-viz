@@ -16,3 +16,12 @@ jobs:
 
     - name: Build
       run: go build -v ./...
+
+    - name: zip artifact
+      run: zip vpcpeeringviz.zip vpcpeeringviz
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: vpcpeeringviz
+        path: vpcpeeringviz.zip
