@@ -7,7 +7,7 @@ on:
       - 'main'
 jobs:
   release:
-    if: github.event.pull_request.merged == true && startsWith(github.ref, 'release/') == true
+    if: github.event.pull_request.merged == true && startsWith(github.ref, 'refs/heads/release/') == true
     runs-on: ubuntu-latest
     steps:
     - name: Download artifact
