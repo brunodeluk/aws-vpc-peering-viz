@@ -1,4 +1,4 @@
-module vpc_graph
+module vpcpeeringviz
 
 go 1.19
 
