@@ -1,33 +1,14 @@
 name: "Build workflow"
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
-      - '*'
+      - 'main'
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.19
-
-    - name: Build
-      run: go build -v ./...
-
-    - name: zip artifact
-      run: zip vpcpeeringviz.zip vpcpeeringviz
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: vpcpeeringviz
-        path: vpcpeeringviz.zip
   release:
+    if: github.event.pull_request.merged == true && startsWith(github.ref, 'release/') == true
     runs-on: ubuntu-latest
-    needs: build
     steps:
     - name: Download artifact
       uses: actions/download-artifact@v3
@@ -39,8 +20,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.run_number }}
-        release_name: Release ${{ github.run_number }}
+        tag_name: ${{ GITHUB_REF###*/ }}
+        release_name: Release ${{ GITHUB_REF###*/ }}
     - name: Upload release
       id: upload_release_asset 
       uses: actions/upload-release-asset@v1
@@ -49,6 +30,6 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./vpcpeeringviz.zip
-        asset_name: vpcpeeringviz.zip
+        asset_name: ${{ GITHUB_REF###*/ }}.zip
         asset_content_type: application/zip
 
