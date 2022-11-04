@@ -11,9 +11,6 @@ A simple cmd tool to visualize your AWS VPC Peering topology
 ## How to use
 
 ```
-aws vpc describe-vpc-peering-connections --output text | vpc_graph
+aws vpc describe-vpc-peering-connections --output text | vpc_graph --output /path/to/graph.png
 ```
-
-The output is a `peerings.png` image located in your current dir path
-
 
