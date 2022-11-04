@@ -16,3 +16,4 @@ aws vpc describe-vpc-peering-connections --output text | vpc_graph
 
 The output is a `peerings.png` image located in your current dir path
 
+
