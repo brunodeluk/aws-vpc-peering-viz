@@ -6,10 +6,34 @@ on:
     branches:
       - 'main'
 jobs:
-  release:
-    # if: startsWith(github.ref, 'refs/heads/release/') == true
+  build:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.19
+
+    - name: Build
+      run: go build -v ./...
+
+    - name: zip artifact
+      run: zip vpcpeeringviz.zip vpcpeeringviz
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: vpcpeeringviz
+        path: vpcpeeringviz.zip
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: echo branch name
+      run: echo ${{github.ref}}
+    - name: echo is merged
+      run: echo ${{github.event.pull_request.merged}}
     - name: Download artifact
       uses: actions/download-artifact@v3
       with:
