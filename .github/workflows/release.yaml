@@ -36,6 +36,11 @@ jobs:
       run: echo ${{github.head_ref}}
     - name: echo is merged
       run: echo ${{github.event.pull_request.merged}}
+    - name: release version
+      id: release_version
+      run: |
+        version=$(echo ${{github.head_ref}} | cut -d '/' -f 2)
+        echo "str=v$version" >> $GITHUB_OUTPUT
     - name: Download artifact
       uses: actions/download-artifact@v3
       with:
@@ -46,8 +51,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${GITHUB_REF###*/}
-        release_name: Release ${GITHUB_REF###*/}
+        tag_name: ${{steps.release_version.outputs.str}}
+        release_name: Release ${{steps.release_version.outputs.str}}
     - name: Upload release
       id: upload_release_asset 
       uses: actions/upload-release-asset@v1
@@ -56,5 +61,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./vpcpeeringviz.zip
-        asset_name: ${GITHUB_REF###*/}.zip
+        asset_name: ${{steps.release_version.outputs.str}}.zip
         asset_content_type: application/zip
