@@ -28,13 +28,13 @@ func TestInvalidInput_ReturnsEmptySlice(t *testing.T) {
 	}
 }
 
-func TestIncompleteInput_ReturnsEmptySlice(t *testing.T) {
+func TestIncompleteInput_ReturnsOneSlice(t *testing.T) {
 	scanner := setUpScanner(`
-	VPCPEERINGCONNECTIONS	pcx-0bc744e9e0469cdb0
+VPCPEERINGCONNECTIONS	pcx-0bc744e9e0469cdb0
 	`)
 	nodes := parser.Parse(scanner)
-	if len(nodes) != 0 {
-		t.Error("expected nodes slice to be empty")
+	if len(nodes) != 1 {
+		t.Errorf("expected 1 node; got %d\n", len(nodes))
 	}
 }
 
