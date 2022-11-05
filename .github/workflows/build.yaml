@@ -5,7 +5,6 @@ on:
       - 'main'
 jobs:
   build:
-    if: false
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -18,11 +17,6 @@ jobs:
     - name: Build
       run: go build -v ./...
 
-    - name: zip artifact
-      run: zip vpcpeeringviz.zip vpcpeeringviz
+    - name: Test
+      run: go test -v ./...
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: vpcpeeringviz
-        path: vpcpeeringviz.zip
