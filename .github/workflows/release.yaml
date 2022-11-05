@@ -7,7 +7,7 @@ on:
       - 'main'
 jobs:
   release:
-    if: startsWith(github.ref, 'refs/heads/release/') == true
+    # if: startsWith(github.ref, 'refs/heads/release/') == true
     runs-on: ubuntu-latest
     steps:
     - name: debug
