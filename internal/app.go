@@ -10,9 +10,9 @@ import (
 func Run(scanner *bufio.Scanner, args map[string]string) error {
 	nodes := parser.Parse(scanner)
 
-	config := render.Config{
+	config := renderer.Config{
 		Output: args["output"],
-		Layout:  args["format"]
+		Format: args["format"],
 	}
 
 	err := renderer.Render(nodes, config)
