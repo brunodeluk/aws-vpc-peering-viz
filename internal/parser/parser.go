@@ -4,17 +4,17 @@ import (
 	"bufio"
 	"strings"
 
-	"vpcpeeringviz/internal/graph"
+	"vpcpeeringviz/internal/parser/node"
 )
 
-func Parse(scanner *bufio.Scanner) []graph.Node {
-	nodes := make([]graph.Node, 0)
+func Parse(scanner *bufio.Scanner) []node.Node {
+	nodes := make([]node.Node, 0)
 	curNodesCount := -1
 	for scanner.Scan() {
 		line := scanner.Text()
 		if strings.HasPrefix(line, "VPCPEERINGCONNECTIONS") {
 			peeringID := strings.Fields(line)[1]
-			nodes = append(nodes, graph.Node{
+			nodes = append(nodes, node.Node{
 				PeeringID: peeringID,
 			})
 			curNodesCount += 1
