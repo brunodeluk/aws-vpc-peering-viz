@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"strings"
 
-	"vpcpeeringviz/internal/parser/node"
+	"vpcpeeringviz/internal/node"
 )
 
 func Parse(scanner *bufio.Scanner) []node.Node {
