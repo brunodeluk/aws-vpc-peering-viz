@@ -28,21 +28,21 @@ func TestInvalidInput_ReturnsEmptySlice(t *testing.T) {
 	}
 }
 
-func TestIncompleteInput_ReturnsEmptySlice(t *testing.T) {
+func TestIncompleteInput_ReturnsOneSlice(t *testing.T) {
 	scanner := setUpScanner(`
-	VPCPEERINGCONNECTIONS	pcx-0bc744e9e0469cdb0
+VPCPEERINGCONNECTIONS	pcx-0bc744e9e0469cdb0
 	`)
 	nodes := parser.Parse(scanner)
-	if len(nodes) != 0 {
-		t.Error("expected nodes slice to be empty")
+	if len(nodes) != 1 {
+		t.Errorf("expected 1 node; got %d\n", len(nodes))
 	}
 }
 
 func TestInputWithOneVPCPeering_ReturnsOneNode(t *testing.T) {
 	scanner := setUpScanner(`
 VPCPEERINGCONNECTIONS	pcx-0bc744e9e0469cdb0
-ACCEPTERVPCINFO	10.123.0.0/16	914808247515	us-east-1	vpc-0498a19dfaa5e25a7
-REQUESTERVPCINFO	10.133.0.0/16	914808247515	us-east-1	vpc-06871633f00e71662
+ACCEPTERVPCINFO	10.333.0.0/16	914808247515	us-east-1	vpc-0498a19dfaa5e25a7
+REQUESTERVPCINFO	10.999.0.0/16	914808247515	us-east-1	vpc-06871633f00e71662
 	`)
 
 	nodes := parser.Parse(scanner)
@@ -67,8 +67,8 @@ REQUESTERVPCINFO	10.133.0.0/16	914808247515	us-east-1	vpc-06871633f00e71662
 func TestValidInputWithIncompleteFields_ReturnsOneNode(t *testing.T) {
 	scanner := setUpScanner(`
 VPCPEERINGCONNECTIONS	pcx-0bc744e9e0469cdb0
-ACCEPTERVPCINFO	10.123.0.0/16  vpc-0498a19dfaa5e25a7
-REQUESTERVPCINFO	10.133.0.0/16	914808247515  vpc-06871633f00e71662
+ACCEPTERVPCINFO	10.333.0.0/16  vpc-0498a19dfaa5e25a7
+REQUESTERVPCINFO	10.999.0.0/16	914808247515  vpc-06871633f00e71662
 	`)
 
 	nodes := parser.Parse(scanner)
@@ -93,14 +93,13 @@ REQUESTERVPCINFO	10.133.0.0/16	914808247515  vpc-06871633f00e71662
 func TestFullValidInput_ReturnsOneNode(t *testing.T) {
 	scanner := setUpScanner(`
 VPCPEERINGCONNECTIONS	pcx-0bc744e9e0469cdb0
-ACCEPTERVPCINFO	10.123.0.0/16	914808247515	us-east-1	vpc-0498a19dfaa5e25a7
-CIDRBLOCKSET	10.123.0.0/16
+ACCEPTERVPCINFO	10.333.0.0/16	914808247515	us-east-1	vpc-0498a19dfaa5e25a7
+CIDRBLOCKSET	10.333.0.0/16
 PEERINGOPTIONS	True	False	False
-REQUESTERVPCINFO	10.133.0.0/16	914808247515	us-east-1	vpc-06871633f00e71662
-CIDRBLOCKSET	10.133.0.0/16
+REQUESTERVPCINFO	10.999.0.0/16	914808247515	us-east-1	vpc-06871633f00e71662
+CIDRBLOCKSET	10.999.0.0/16
 PEERINGOPTIONS	True	False	False
 STATUS	active	Active
-TAGS	Name	d4eX-to-d6eX-pcx
 	`)
 
 	nodes := parser.Parse(scanner)
