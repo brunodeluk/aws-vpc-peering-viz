@@ -47,11 +47,6 @@ func Render(nodes []node.Node, config Config) error {
 		"jpg": graphviz.JPG,
 	}
 
-	// var buf bytes.Buffer
-	// if err := g.Render(graph, graphvizFormats[config.Format], &buf); err != nil {
-	// 	return err
-	// }
-
 	g.SetLayout(graphviz.CIRCO)
 
 	if err := g.RenderFilename(graph, graphvizFormats[config.Format], config.Output); err != nil {
