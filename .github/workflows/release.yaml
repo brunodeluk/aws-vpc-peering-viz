@@ -6,7 +6,7 @@ on:
     branches:
       - 'main'
 jobs:
-  build:
+  build-darwin-arm64:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
     steps:
@@ -18,33 +18,107 @@ jobs:
         go-version: 1.19
 
     - name: Build
-      run: go build -v .
+      run: env GOOS=darwin GOARCH=arm64 build -v .
 
     - name: zip artifact
-      run: zip vpcpeeringviz.zip vpcpeeringviz
+      run: zip vpcpeeringviz_darwin_arm64.zip vpcpeeringviz
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: vpcpeeringviz
-        path: vpcpeeringviz.zip
+        name: vpcpeeringviz_darwin_arm64
+        path: vpcpeeringviz_darwin_arm64.zip
+  build-darwin-amd54:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.19
+
+    - name: Build
+      run: env GOOS=darwin GOARCH=amd64 go build -v .
+
+    - name: zip artifact
+      run: zip vpcpeeringviz_darwin_amd64.zip vpcpeeringviz
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: vpcpeeringviz_darwin_amd64
+        path: vpcpeeringviz_darwin_amd64.zip
+  build-windows-amd64:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.19
+
+    - name: Build
+      run: env GOOS=windows GOARCH=amd64 go build -v .
+
+    - name: zip artifact
+      run: zip vpcpeeringviz_windows_amd64.zip vpcpeeringviz
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: vpcpeeringviz_windows_amd64
+        path: vpcpeeringviz_windows_amd64.zip
+  build-linux-amd64:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.19
+
+    - name: Build
+      run: env GOOS=linux GOARCH=amd64 go build -v .
+
+    - name: zip artifact
+      run: zip vpcpeeringviz_linux_amd64.zip vpcpeeringviz
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: vpcpeeringviz_linux_amd64
+        path: vpcpeeringviz_linux_amd64.zip
   release:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build-darwin-arm64, build-darwin-amd64, build-windows-amd64, build-linux-amd64]
     steps:
-    - name: echo branch name
-      run: echo ${{github.head_ref}}
-    - name: echo is merged
-      run: echo ${{github.event.pull_request.merged}}
     - name: release version
       id: release_version
       run: |
         version=$(echo ${{github.head_ref}} | cut -d '/' -f 2)
         echo "str=v$version" >> $GITHUB_OUTPUT
-    - name: Download artifact
+    - name: Download darwin arm64
       uses: actions/download-artifact@v3
       with:
-        name: vpcpeeringviz
+        name: vpcpeeringviz_darwin_arm64
+    - name: Download darwin amd64
+      uses: actions/download-artifact@v3
+      with:
+        name: vpcpeeringviz_darwin_amd64
+    - name: Download windows amd64
+      uses: actions/download-artifact@v3
+      with:
+        name: vpcpeeringviz_windows_amd64
+    - name: Download linux amd64
+      uses: actions/download-artifact@v3
+      with:
+        name: vpcpeeringviz_linux_amd64
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
@@ -53,13 +127,43 @@ jobs:
       with:
         tag_name: ${{steps.release_version.outputs.str}}
         release_name: Release ${{steps.release_version.outputs.str}}
-    - name: Upload release
-      id: upload_release_asset 
+    - name: Upload darwin arm64
+      id: upload_darwin_arm64_release_asset 
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./vpcpeeringviz.zip
-        asset_name: ${{steps.release_version.outputs.str}}.zip
+        asset_path: ./vpcpeeringviz_darwin_arm64.zip
+        asset_name: vpcpeeringviz_${{steps.release_version.outputs.str}}_darwin_arm64.zip
+        asset_content_type: application/zip
+    - name: Upload darwin amd64
+      id: upload_darwin_amd64_release_asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./vpcpeeringviz_darwin_amd64.zip
+        asset_name: vpcpeeringviz_${{steps.release_version.outputs.str}}_darwin_amd64.zip
+        asset_content_type: application/zip
+    - name: Upload windows amd64
+      id: upload_windows_amd64_release_asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./vpcpeeringviz_windows_amd64.zip
+        asset_name: vpcpeeringviz_${{steps.release_version.outputs.str}}_windows_amd64.zip
+        asset_content_type: application/zip
+    - name: Upload linux amd64
+      id: upload_linux_amd64_release_asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./vpcpeeringviz_linux_amd64.zip
+        asset_name: vpcpeeringviz_${{steps.release_version.outputs.str}}_linux_amd64.zip
         asset_content_type: application/zip
