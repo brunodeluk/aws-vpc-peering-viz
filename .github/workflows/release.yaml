@@ -28,7 +28,7 @@ jobs:
       with:
         name: vpcpeeringviz_darwin_arm64
         path: vpcpeeringviz_darwin_arm64.zip
-  build-darwin-amd54:
+  build-darwin-amd64:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
     steps:
