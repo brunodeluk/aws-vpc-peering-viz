@@ -19,8 +19,8 @@ jobs:
 
     - name: Build
       run: |
-      export CGO_ENABLED=1
-      go build -v .
+        export CGO_ENABLED=1
+        go build -v .
 
     - name: zip artifact
       run: zip vpcpeeringviz_darwin_arm64.zip vpcpeeringviz
