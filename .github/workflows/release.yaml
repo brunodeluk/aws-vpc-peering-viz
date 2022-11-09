@@ -18,7 +18,7 @@ jobs:
         go-version: 1.19
 
     - name: Build
-      run: env GOOS=darwin GOARCH=arm64 build -v .
+      run: env GOOS=darwin GOARCH=arm64 go build -v .
 
     - name: zip artifact
       run: zip vpcpeeringviz_darwin_arm64.zip vpcpeeringviz
@@ -62,7 +62,7 @@ jobs:
         go-version: 1.19
 
     - name: Build
-      run: env GOOS=windows GOARCH=amd64 go build -v .
+      run: go build -v .
 
     - name: zip artifact
       run: zip vpcpeeringviz_windows_amd64.zip vpcpeeringviz.exe
