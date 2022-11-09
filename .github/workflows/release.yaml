@@ -18,6 +18,9 @@ jobs:
         go-version: 1.19
 
     - name: Build
+      env:
+        GOOS: darwin
+        GOARCH: arm64
       run: |
         export CGO_ENABLED=1
         go build -v .
@@ -42,7 +45,12 @@ jobs:
         go-version: 1.19
 
     - name: Build
-      run: env GOOS=darwin GOARCH=amd64 go build -v .
+      env:
+        GOOS: darwin
+        GOARCH: amd64
+      run: |
+        export CGO_ENABLED=1
+        go build -v .
 
     - name: zip artifact
       run: zip vpcpeeringviz_darwin_amd64.zip vpcpeeringviz
@@ -149,16 +157,16 @@ jobs:
         asset_path: ./vpcpeeringviz_darwin_amd64.zip
         asset_name: vpcpeeringviz_${{steps.release_version.outputs.str}}_darwin_amd64.zip
         asset_content_type: application/zip
-    - name: Upload windows amd64
-      id: upload_windows_amd64_release_asset 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./vpcpeeringviz_windows_amd64.zip
-        asset_name: vpcpeeringviz_${{steps.release_version.outputs.str}}_windows_amd64.zip
-        asset_content_type: application/zip
+    # - name: Upload windows amd64
+    #   id: upload_windows_amd64_release_asset 
+    #   uses: actions/upload-release-asset@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #     asset_path: ./vpcpeeringviz_windows_amd64.zip
+    #     asset_name: vpcpeeringviz_${{steps.release_version.outputs.str}}_windows_amd64.zip
+    #     asset_content_type: application/zip
     - name: Upload linux amd64
       id: upload_linux_amd64_release_asset 
       uses: actions/upload-release-asset@v1
