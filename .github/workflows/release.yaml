@@ -7,7 +7,7 @@ on:
       - 'main'
 jobs:
   build-darwin-arm64:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
     steps:
     - uses: actions/checkout@v3
@@ -29,7 +29,7 @@ jobs:
         name: vpcpeeringviz_darwin_arm64
         path: vpcpeeringviz_darwin_arm64.zip
   build-darwin-amd64:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
     steps:
     - uses: actions/checkout@v3
@@ -51,7 +51,7 @@ jobs:
         name: vpcpeeringviz_darwin_amd64
         path: vpcpeeringviz_darwin_amd64.zip
   build-windows-amd64:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
     steps:
     - uses: actions/checkout@v3
@@ -65,7 +65,7 @@ jobs:
       run: env GOOS=windows GOARCH=amd64 go build -v .
 
     - name: zip artifact
-      run: zip vpcpeeringviz_windows_amd64.zip vpcpeeringviz
+      run: zip vpcpeeringviz_windows_amd64.zip vpcpeeringviz.exe
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
