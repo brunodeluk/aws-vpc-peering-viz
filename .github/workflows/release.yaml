@@ -76,7 +76,7 @@ jobs:
         GOOS: windows
         GOARCH: amd64
       run: |
-        go build -v .
+        CGO_ENABLED="1" go build -v .
 
     - name: zip artifact
       run: zip vpcpeeringviz_windows_amd64.zip vpcpeeringviz.exe
